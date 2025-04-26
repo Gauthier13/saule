@@ -20,7 +20,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* Utilisation des couleurs Catppuccin Mocha (thème sombre) */
-    --background: theme('colors.ctp-base.DEFAULT');
+    --background: theme('colors.ctp-crust.DEFAULT');
     --foreground: theme('colors.ctp-text.DEFAULT');
   }
 }

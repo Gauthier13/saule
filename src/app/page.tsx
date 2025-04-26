@@ -1,7 +1,14 @@
+import Notion from "./components/Notion";
+import Timer from "./components/Timer";
+
 export default function Home() {
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Test des couleurs Catppuccin</h1>
+    <div className="min-h-screen max-w-screen-xl flex flex-col items-center mx-auto p-8 gap-8">
+      <Timer />
+      <Notion />
+      <h1 className="text-3xl font-bold mb-6">
+        Test des coulergeeurs Catppuccin
+      </h1>
 
       {/* Texte avec couleurs Catppuccin */}
       <div className="space-y-2">
