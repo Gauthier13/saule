@@ -1,11 +1,16 @@
-@import "tailwindcss";
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Utilisation des couleurs Catppuccin Latte (thème clair) */
+  --background: theme('colors.ctp-base.DEFAULT');
+  --foreground: theme('colors.ctp-text.DEFAULT');
 }
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -14,9 +19,16 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Utilisation des couleurs Catppuccin Mocha (thème sombre) */
+    --background: theme('colors.ctp-base.DEFAULT');
+    --foreground: theme('colors.ctp-text.DEFAULT');
   }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
