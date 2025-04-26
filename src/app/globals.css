@@ -3,6 +3,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@plugin "daisyui";
+
 
 :root {
   /* Utilisation des couleurs Catppuccin Latte (thème clair) */
