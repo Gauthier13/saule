@@ -6,22 +6,32 @@ import useTimer from "easytimer-react-hook"
 import { useState } from "react"
 
 export default function Timer() {
-  const [countdown, setCountdown] = useState(25)
-  const [timer, isTargetAchieved] = useTimer({
+  const [countdown] = useState(25)
+  const [timer] = useTimer({
     countdown: true,
     startValues: { minutes: countdown },
     /* Hook configuration */
   })
 
+  // Gère le texte du bouton (Start/Pause)
+  const [isStarted, setIsStarted] = useState(false)
+
   const handleTimer = () => {
     if (timer.isRunning()) {
       timer.pause()
+      setIsStarted(false)
     } else {
       timer.start({
-        /* EasyTimer start configuration */
         startValues: { minutes: countdown },
       })
+      setIsStarted(true)
     }
+  }
+
+  const handleReset = () => {
+    timer.stop() // Pour bien remettre à zéro ET stopper
+    timer.reset()
+    setIsStarted(false)
   }
 
   return (
@@ -34,15 +44,16 @@ export default function Timer() {
           onClick={handleTimer}
           className="font-semibold bg-ctp-base rounded-full px-4 w-fit text-cpt-mantle text-2xl hover:bg-ctp-surface1 active:bg-ctp-surface2"
         >
-          {timer.isRunning() ? "Pause" : "Start"}
+          {isStarted ? "Pause" : "Start"}
         </button>
         <div className="flex gap-2">
           <button
-            onClick={() => timer.reset()}
+            onClick={handleReset}
             className="bg-ctp-base hover:bg-ctp-surface1 active:bg-ctp-surface2 w-fit p-2 rounded-full"
           >
             <RefreshCcw size={18} />
           </button>
+
           <Modal
             icon={
               <div className="bg-ctp-base hover:bg-ctp-surface1 active:bg-ctp-surface2 w-fit p-2 rounded-full">
