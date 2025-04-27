@@ -1,54 +1,40 @@
 "use client"
-
 import { RefreshCcw, Settings2 } from "lucide-react"
+import React from "react"
+import { useTimer } from "react-timer-hook"
 import { Modal } from "./Modal"
-import useTimer from "easytimer-react-hook"
-import { useState } from "react"
 
-export default function Timer() {
-  const [countdown] = useState(25)
-  const [timer] = useTimer({
-    countdown: true,
-    startValues: { minutes: countdown },
-    /* Hook configuration */
-  })
-
-  // Gère le texte du bouton (Start/Pause)
-  const [isStarted, setIsStarted] = useState(false)
-
-  const handleTimer = () => {
-    if (timer.isRunning()) {
-      timer.pause()
-      setIsStarted(false)
-    } else {
-      timer.start({
-        startValues: { minutes: countdown },
-      })
-      setIsStarted(true)
-    }
-  }
-
-  const handleReset = () => {
-    timer.stop() // Pour bien remettre à zéro ET stopper
-    timer.reset()
-    setIsStarted(false)
-  }
+function CountDown({ expiryTimestamp }) {
+  const { seconds, minutes, hours, isRunning, start, pause, restart } =
+    useTimer({
+      expiryTimestamp,
+      onExpire: () => console.warn("onExpire called"),
+      interval: 20,
+    })
 
   return (
     <div className="flex flex-col gap-2 items-center">
-      <p className="text-[124px] font-bold text-ctp-text mt-28">
-        {timer.getTimeValues().toString()}
-      </p>
+      <div className="text-[124px] font-bold text-ctp-text mt-28">
+        <span>{String(hours).padStart(2, "0")}</span>:
+        <span>{String(minutes).padStart(2, "0")}</span>:
+        <span>{String(seconds).padStart(2, "0")}</span>
+      </div>
+
       <div className="flex gap-4">
         <button
-          onClick={handleTimer}
+          onClick={isRunning ? pause : start}
           className="font-semibold bg-ctp-base rounded-full px-4 w-fit text-cpt-mantle text-2xl hover:bg-ctp-surface1 active:bg-ctp-surface2"
         >
-          {isStarted ? "Pause" : "Start"}
+          {isRunning ? "Pause" : "Start"}
         </button>
         <div className="flex gap-2">
           <button
-            onClick={handleReset}
+            onClick={() => {
+              const time = new Date()
+              time.setSeconds(time.getSeconds() + 300)
+              restart(time)
+              pause()
+            }}
             className="bg-ctp-base hover:bg-ctp-surface1 active:bg-ctp-surface2 w-fit p-2 rounded-full"
           >
             <RefreshCcw size={18} />
@@ -91,6 +77,16 @@ export default function Timer() {
           </Modal>
         </div>
       </div>
+    </div>
+  )
+}
+
+export default function App() {
+  const time = new Date()
+  time.setSeconds(time.getSeconds() + 600)
+  return (
+    <div>
+      <CountDown expiryTimestamp={time} />
     </div>
   )
 }
