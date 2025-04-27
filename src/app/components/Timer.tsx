@@ -9,12 +9,20 @@ export default function Timer() {
   const [countdown, setCountdown] = useState(25)
   const [timer, isTargetAchieved] = useTimer({
     countdown: true,
+    startValues: { minutes: countdown },
     /* Hook configuration */
   })
-  timer.start({
-    /* EasyTimer start configuration */
-    startValues: { minutes: countdown },
-  })
+
+  const handleTimer = () => {
+    if (timer.isRunning()) {
+      timer.pause()
+    } else {
+      timer.start({
+        /* EasyTimer start configuration */
+        startValues: { minutes: countdown },
+      })
+    }
+  }
 
   return (
     <div className="flex flex-col gap-2 items-center">
@@ -23,10 +31,10 @@ export default function Timer() {
       </p>
       <div className="flex gap-4">
         <button
-          onClick={() => timer.start()}
+          onClick={handleTimer}
           className="font-semibold bg-ctp-base rounded-full px-4 w-fit text-cpt-mantle text-2xl hover:bg-ctp-surface1 active:bg-ctp-surface2"
         >
-          Start
+          {timer.isRunning() ? "Pause" : "Start"}
         </button>
         <div className="flex gap-2">
           <button
