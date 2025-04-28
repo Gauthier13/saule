@@ -7,6 +7,9 @@ import { Modal } from "./Modal"
 function Countdown({ expiryTimestamp }: { expiryTimestamp: Date }) {
   const [pausedTime, setPausedTime] = useState<number | null>(null)
   const [initialDuration, setInitialDuration] = React.useState(25 * 60)
+  const [inputHours, setInputHours] = useState<string>("0")
+  const [inputMinutes, setInputMinutes] = useState<string>("25")
+  const [inputSeconds, setInputSeconds] = useState<string>("0")
 
   const { seconds, minutes, hours, isRunning, start, pause, restart } =
     useTimer({
@@ -24,7 +27,6 @@ function Countdown({ expiryTimestamp }: { expiryTimestamp: Date }) {
 
   const handleStart = () => {
     if (pausedTime !== null) {
-      // Calculer une nouvelle date d'expiration basée sur le temps restant
       const newExpiryTime = new Date()
       newExpiryTime.setSeconds(newExpiryTime.getSeconds() + pausedTime)
       restart(newExpiryTime)
@@ -35,22 +37,23 @@ function Countdown({ expiryTimestamp }: { expiryTimestamp: Date }) {
   }
 
   const handleReset = () => {
-    // Créer une nouvelle date d'expiration basée sur la durée initiale
     const time = new Date()
     time.setSeconds(time.getSeconds() + initialDuration)
     restart(time, false)
-
-    setPausedTime(null) // Réinitialiser le temps de pause
+    setPausedTime(null)
   }
 
-  // Fonction pour changer la durée initiale (utile pour les réglages)
-  const setNewDuration = (hours: number, minutes: number, seconds: number) => {
+  const setNewDuration = () => {
+    const hours = parseInt(inputHours) || 0
+    const minutes = parseInt(inputMinutes) || 0
+    const seconds = parseInt(inputSeconds) || 0
+
     const newDuration = hours * 3600 + minutes * 60 + seconds
     setInitialDuration(newDuration)
+
     const time = new Date()
     time.setSeconds(time.getSeconds() + newDuration)
     restart(time, false)
-    pause()
     setPausedTime(null)
   }
 
@@ -65,7 +68,11 @@ function Countdown({ expiryTimestamp }: { expiryTimestamp: Date }) {
       <div className="flex gap-4">
         <button
           onClick={isRunning ? handlePause : handleStart}
-          className="font-semibold bg-ctp-base rounded-full px-4 w-fit text-cpt-mantle text-2xl hover:bg-ctp-surface1 active:bg-ctp-surface2"
+          className={
+            isRunning
+              ? "btn rounded-full bg-ctp-base text-ctp-red w-28"
+              : "btn rounded-full bg-ctp-base text-ctp-lavender w-28"
+          }
         >
           {isRunning ? "Pause" : "Start"}
         </button>
@@ -73,45 +80,61 @@ function Countdown({ expiryTimestamp }: { expiryTimestamp: Date }) {
         <div className="flex gap-2">
           <button
             onClick={handleReset}
-            className="bg-ctp-base hover:bg-ctp-surface1 active:bg-ctp-surface2 w-fit p-2 rounded-full"
+            className="bg-ctp-base hover:bg-ctp-surface1 active:bg-ctp-surface2 btn btn-circle"
           >
             <RefreshCcw size={18} />
           </button>
 
           <Modal
             icon={
-              <div className="bg-ctp-base hover:bg-ctp-surface1 active:bg-ctp-surface2 w-fit p-2 rounded-full">
+              <div className="bg-ctp-base hover:bg-ctp-surface1 active:bg-ctp-surface2 btn btn-circle">
                 <Settings2 size={18} />
               </div>
             }
           >
-            <p>Réglages du minuteur à venir ici !</p>
-            <div className="flex gap-2 w-72">
+            <p className="font-medium mb-3">Réglages du minuteur</p>
+
+            <div className="flex gap-2 w-72 items-center">
               <input
-                className="rounded-lg px-2"
+                className="rounded-lg px-2 w-full input-md input validator"
                 placeholder="h"
-                aria-label="minutes"
+                aria-label="heures"
                 type="number"
                 min={0}
                 max={24}
+                value={inputHours}
+                onChange={(e) => setInputHours(e.target.value)}
               />
+              <span>:</span>
               <input
-                className="rounded-lg px-2 "
+                className="rounded-lg px-2 w-full  input validator"
                 placeholder="min"
                 aria-label="minutes"
                 type="number"
                 min={0}
                 max={60}
+                value={inputMinutes}
+                onChange={(e) => setInputMinutes(e.target.value)}
               />
+              <span>:</span>
               <input
-                className="rounded-lg px-2"
+                className="rounded-lg px-2 w-full  input validator"
                 placeholder="sec"
-                aria-label="minutes"
+                aria-label="secondes"
                 type="number"
                 min={0}
                 max={60}
+                value={inputSeconds}
+                onChange={(e) => setInputSeconds(e.target.value)}
               />
             </div>
+
+            <button
+              onClick={setNewDuration}
+              className="mt-4 bg-ctp-base rounded-lg px-4 py-2 w-full text-cpt-mantle hover:bg-ctp-surface1 active:bg-ctp-surface2"
+            >
+              Appliquer
+            </button>
           </Modal>
         </div>
       </div>
@@ -121,7 +144,7 @@ function Countdown({ expiryTimestamp }: { expiryTimestamp: Date }) {
 
 export default function Timer() {
   const time = new Date()
-  time.setSeconds(time.getSeconds() + 600)
+  time.setMinutes(time.getMinutes() + 25) // 25 minutes par défaut
   return (
     <div>
       <Countdown expiryTimestamp={time} />

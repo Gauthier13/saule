@@ -11,15 +11,15 @@ export function Modal({ buttonLabel, title, icon, children }: ModalProps) {
   return (
     <>
       <button
-        className="btn flex items-center gap-2"
-        onClick={() => document.getElementById("my_modal_1")?.showModal()}
+        className="btn btn-circle flex items-center gap-2"
+        onClick={() => document.getElementById("my_modal_2")?.showModal()}
       >
         {icon}
         {buttonLabel}
       </button>
 
       <dialog
-        id="my_modal_1"
+        id="my_modal_2"
         className="modal bg-ctp-surface0 p-4 rounded-lg text-ctp-text"
       >
         <div className="modal-box">
