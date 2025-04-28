@@ -12,23 +12,23 @@ export function Modal({ buttonLabel, title, icon, children }: ModalProps) {
     <>
       <button
         className="btn btn-circle flex items-center gap-2"
-        onClick={() => document.getElementById("my_modal_2")?.showModal()}
+        onClick={() => document.getElementById("settings_modal")?.showModal()}
       >
         {icon}
         {buttonLabel}
       </button>
 
       <dialog
-        id="my_modal_2"
-        className="modal bg-ctp-surface0 p-4 rounded-lg text-ctp-text"
+        id="settings_modal"
+        className="modal p-4 rounded-lg text-ctp-text"
       >
-        <div className="modal-box">
+        <div className="modal-box bg-ctp-base">
           <h3 className="font-bold text-lg text-ctp-text">{title}</h3>
           <div className="py-4">{children}</div>
           <div className="modal-action">
             <form method="dialog">
-              <button className="btn bg-ctp-overlay0 px-2 rounded-lg">
-                Close
+              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                ✕
               </button>
             </form>
           </div>

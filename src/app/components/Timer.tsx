@@ -94,9 +94,9 @@ function Countdown({ expiryTimestamp }: { expiryTimestamp: Date }) {
           >
             <p className="font-medium mb-3">Réglages du minuteur</p>
 
-            <div className="flex gap-2 w-72 items-center">
+            <div className="flex gap-2 items-center w-full">
               <input
-                className="rounded-lg px-2 w-full input-md input validator"
+                className="rounded-lg px-2 w-24 input validator"
                 placeholder="h"
                 aria-label="heures"
                 type="number"
@@ -107,7 +107,7 @@ function Countdown({ expiryTimestamp }: { expiryTimestamp: Date }) {
               />
               <span>:</span>
               <input
-                className="rounded-lg px-2 w-full  input validator"
+                className="rounded-lg px-2 w-24  input validator"
                 placeholder="min"
                 aria-label="minutes"
                 type="number"
@@ -118,7 +118,7 @@ function Countdown({ expiryTimestamp }: { expiryTimestamp: Date }) {
               />
               <span>:</span>
               <input
-                className="rounded-lg px-2 w-full  input validator"
+                className="rounded-lg px-2 w-24 input validator"
                 placeholder="sec"
                 aria-label="secondes"
                 type="number"
@@ -127,14 +127,13 @@ function Countdown({ expiryTimestamp }: { expiryTimestamp: Date }) {
                 value={inputSeconds}
                 onChange={(e) => setInputSeconds(e.target.value)}
               />
+              <button
+                onClick={setNewDuration}
+                className="bg-ctp-surface0 text-ctp-lavender rounded-lg px-4 py-2 w-fit text-cpt-mantle hover:bg-ctp-surface1 active:bg-ctp-surface2"
+              >
+                Appliquer
+              </button>
             </div>
-
-            <button
-              onClick={setNewDuration}
-              className="mt-4 bg-ctp-base rounded-lg px-4 py-2 w-full text-cpt-mantle hover:bg-ctp-surface1 active:bg-ctp-surface2"
-            >
-              Appliquer
-            </button>
           </Modal>
         </div>
       </div>
