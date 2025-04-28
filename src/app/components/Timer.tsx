@@ -4,12 +4,13 @@ import React from "react"
 import { useTimer } from "react-timer-hook"
 import { Modal } from "./Modal"
 
-function CountDown({ expiryTimestamp }) {
+function Countdown({ expiryTimestamp }: { expiryTimestamp: Date }) {
   const { seconds, minutes, hours, isRunning, start, pause, restart } =
     useTimer({
       expiryTimestamp,
       onExpire: () => console.warn("onExpire called"),
       interval: 20,
+      autoStart: false,
     })
 
   return (
@@ -81,12 +82,12 @@ function CountDown({ expiryTimestamp }) {
   )
 }
 
-export default function App() {
+export default function Timer() {
   const time = new Date()
   time.setSeconds(time.getSeconds() + 600)
   return (
     <div>
-      <CountDown expiryTimestamp={time} />
+      <Countdown expiryTimestamp={time} />
     </div>
   )
 }
