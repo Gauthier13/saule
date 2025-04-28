@@ -1,10 +1,13 @@
 "use client"
 import { RefreshCcw, Settings2 } from "lucide-react"
-import React from "react"
+import React, { useState } from "react"
 import { useTimer } from "react-timer-hook"
 import { Modal } from "./Modal"
 
 function Countdown({ expiryTimestamp }: { expiryTimestamp: Date }) {
+  const [pausedTime, setPausedTime] = useState<number | null>(null)
+  const [initialDuration, setInitialDuration] = React.useState(25 * 60)
+
   const { seconds, minutes, hours, isRunning, start, pause, restart } =
     useTimer({
       expiryTimestamp,
@@ -12,6 +15,44 @@ function Countdown({ expiryTimestamp }: { expiryTimestamp: Date }) {
       interval: 20,
       autoStart: false,
     })
+
+  const handlePause = () => {
+    // Enregistrer combien de temps il reste quand on pause
+    setPausedTime(hours * 3600 + minutes * 60 + seconds)
+    pause()
+  }
+
+  const handleStart = () => {
+    if (pausedTime !== null) {
+      // Calculer une nouvelle date d'expiration basée sur le temps restant
+      const newExpiryTime = new Date()
+      newExpiryTime.setSeconds(newExpiryTime.getSeconds() + pausedTime)
+      restart(newExpiryTime)
+      setPausedTime(null)
+    } else {
+      start()
+    }
+  }
+
+  const handleReset = () => {
+    // Créer une nouvelle date d'expiration basée sur la durée initiale
+    const time = new Date()
+    time.setSeconds(time.getSeconds() + initialDuration)
+    restart(time, false)
+
+    setPausedTime(null) // Réinitialiser le temps de pause
+  }
+
+  // Fonction pour changer la durée initiale (utile pour les réglages)
+  const setNewDuration = (hours: number, minutes: number, seconds: number) => {
+    const newDuration = hours * 3600 + minutes * 60 + seconds
+    setInitialDuration(newDuration)
+    const time = new Date()
+    time.setSeconds(time.getSeconds() + newDuration)
+    restart(time, false)
+    pause()
+    setPausedTime(null)
+  }
 
   return (
     <div className="flex flex-col gap-2 items-center">
@@ -23,19 +64,15 @@ function Countdown({ expiryTimestamp }: { expiryTimestamp: Date }) {
 
       <div className="flex gap-4">
         <button
-          onClick={isRunning ? pause : start}
+          onClick={isRunning ? handlePause : handleStart}
           className="font-semibold bg-ctp-base rounded-full px-4 w-fit text-cpt-mantle text-2xl hover:bg-ctp-surface1 active:bg-ctp-surface2"
         >
           {isRunning ? "Pause" : "Start"}
         </button>
+
         <div className="flex gap-2">
           <button
-            onClick={() => {
-              const time = new Date()
-              time.setSeconds(time.getSeconds() + 300)
-              restart(time)
-              pause()
-            }}
+            onClick={handleReset}
             className="bg-ctp-base hover:bg-ctp-surface1 active:bg-ctp-surface2 w-fit p-2 rounded-full"
           >
             <RefreshCcw size={18} />
